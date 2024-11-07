@@ -8,6 +8,7 @@ public class Player : MonoBehaviour
     private float lookSpeed = 2f;
     private CharacterController controller;
     private float verticalRotation = 0f;
+    [SerializeField] private Transform flashlight;
 
     void Start()
     {
@@ -18,7 +19,7 @@ public class Player : MonoBehaviour
     void Update()
     {
         Movement();
-        
+        UpdateFlashlight();
     }
     private void Movement()
     {
@@ -44,5 +45,16 @@ public class Player : MonoBehaviour
         verticalRotation -= mouseY;
         verticalRotation = Mathf.Clamp(verticalRotation, -65f, 65f);
         Camera.main.transform.localRotation = Quaternion.Euler(verticalRotation, 0f, 0f);
+    }
+    private void UpdateFlashlight()
+    {
+        if (flashlight != null)
+        {
+            // Match the flashlight's rotation to the camera's rotation
+            flashlight.rotation = Camera.main.transform.rotation;
+
+            // Optional: Apply an offset position to the flashlight if needed
+            flashlight.position = Camera.main.transform.position + Camera.main.transform.forward * 0.5f;
+        }
     }
 }
