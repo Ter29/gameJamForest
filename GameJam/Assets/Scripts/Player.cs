@@ -9,6 +9,8 @@ public class Player : MonoBehaviour
     private CharacterController controller;
     private float verticalRotation = 0f;
     [SerializeField] private Transform flashlight;
+    private bool isGrounded;
+    private Vector3 velocity;
 
     void Start()
     {
@@ -24,10 +26,10 @@ public class Player : MonoBehaviour
     private void Movement()
     {
         if(Input.GetKey(KeyCode.LeftShift)){
-            moveSpeed = 2f;
+            moveSpeed = 20f;
         }
         else{
-            moveSpeed = 4f;
+            moveSpeed = 25f;
         }
 
         float x = Input.GetAxis("Horizontal");
@@ -45,6 +47,13 @@ public class Player : MonoBehaviour
         verticalRotation -= mouseY;
         verticalRotation = Mathf.Clamp(verticalRotation, -65f, 65f);
         Camera.main.transform.localRotation = Quaternion.Euler(verticalRotation, 0f, 0f);
+
+        isGrounded = controller.isGrounded;
+        if(isGrounded && velocity.y < 1.2)
+        {
+            velocity.y = -40f;
+        }
+        controller.Move(velocity * Time.deltaTime);
     }
     private void UpdateFlashlight()
     {
