@@ -8,7 +8,6 @@ public class TypewriterEffect : MonoBehaviour
     public float typingSpeed = 0.05f; // Delay between each character
     public Canvas targetCanvas;
     private string fullText; // Stores the full text to be typed out
-    private bool isTexting = false;
     void Start()
     {
         // Set the full text to what the text component initially has
