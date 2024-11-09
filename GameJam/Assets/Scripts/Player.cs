@@ -1,6 +1,6 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-
 
 public class Player : MonoBehaviour
 {   
@@ -11,28 +11,17 @@ public class Player : MonoBehaviour
     [SerializeField] private Transform flashlight;
     private bool isGrounded;
     private Vector3 velocity;
-    [SerializeField] private Text targetText; 
-    [SerializeField] private Text counterText; 
-    private bool isVisible = true;
-    [SerializeField] private float interactDistance = 10f;
-    private int counter = 0;
 
     void Start()
     {
         controller = GetComponent<CharacterController>();
         Cursor.lockState = CursorLockMode.Locked;
-        targetText.gameObject.SetActive(isVisible);
     }
 
     void Update()
     {
         Movement();
         UpdateFlashlight();
-        Collect();
-    }
-    void LateUpdate()
-    {
-        counterText.text = counter.ToString() + "/4";
     }
     private void Movement()
     {
@@ -70,50 +59,11 @@ public class Player : MonoBehaviour
     {
         if (flashlight != null)
         {
+            // Match the flashlight's rotation to the camera's rotation
             flashlight.rotation = Camera.main.transform.rotation;
 
+            // Optional: Apply an offset position to the flashlight if needed
             flashlight.position = Camera.main.transform.position + Camera.main.transform.forward * 0.5f;
         }
-    }
-    private void Collect()
-    {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-
-        if (Physics.Raycast(ray, out hit))
-        {   
-            GameObject hitObject = hit.collider.gameObject;
-
-            if (hitObject != this.gameObject && hitObject.CompareTag("Collectible"))
-            {
-                
-                float distanceToObject = Vector3.Distance(transform.position, hitObject.transform.position);
-                if (distanceToObject <= interactDistance)
-                {
-                    targetText.gameObject.SetActive(true);
-
-                    if(Input.GetKeyDown(KeyCode.E))
-                    {
-                        counter ++;
-                        CollectObject(hitObject);
-                        
-                        Debug.Log(counter);
-                    }
-                }
-            }
-            else
-            {
-                targetText.gameObject.SetActive(false);
-            }
-            
-        }
-        else
-        {
-            targetText.gameObject.SetActive(false);
-        }
-    }
-    private void CollectObject(GameObject collectible)
-    {
-        collectible.SetActive(false);
     }
 }
